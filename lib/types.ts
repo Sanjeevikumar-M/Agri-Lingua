@@ -10,6 +10,8 @@ export interface UserProfile {
   completedModules: number[]
   currentModule: number
   createdAt: string
+  yieldPoints: YieldPoints
+  unlockedResolutions: DataResolutionUnlock[]
 }
 
 export interface Badge {
@@ -48,12 +50,15 @@ export interface LessonContent {
 }
 
 export interface DataVisualization {
-  type: "map" | "chart" | "comparison"
+  type: "map" | "chart" | "comparison" | "timeseries"
   title: string
   description: string
   imageUrl: string
   dataSource: string
   citation: string
+  resolution?: string
+  realDataValues?: { date: string; value: number; unit: string }[]
+  requiresResolution?: string // ID of required resolution unlock
 }
 
 export interface Question {
@@ -83,4 +88,15 @@ export interface LeaderboardEntry {
   totalXP: number
   badges: number
   streak: number
+}
+
+export interface DataResolutionUnlock {
+  resolutionId: string
+  unlockedAt: string
+}
+
+export interface YieldPoints {
+  total: number
+  spent: number
+  available: number
 }

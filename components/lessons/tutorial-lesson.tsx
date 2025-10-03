@@ -3,6 +3,7 @@ import { useState } from "react"
 import type { Lesson } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 import Image from "next/image"
 
 interface TutorialLessonProps {
@@ -43,9 +44,31 @@ export default function TutorialLesson({ lesson, onComplete }: TutorialLessonPro
 
           <p className="text-muted-foreground mb-3">{lesson.content.dataVisualization.description}</p>
 
-          <div className="bg-white rounded-lg p-3 text-sm border border-blue-200">
-            <p className="font-semibold mb-1">Data Source: {lesson.content.dataVisualization.dataSource}</p>
-            <p className="text-xs text-muted-foreground">{lesson.content.dataVisualization.citation}</p>
+          <div className="bg-white rounded-lg p-4 border border-blue-200 space-y-3">
+            <div className="flex items-center gap-2 flex-wrap">
+              <Badge variant="secondary" className="font-semibold">
+                {lesson.content.dataVisualization.dataSource}
+              </Badge>
+              {lesson.content.dataVisualization.resolution && (
+                <Badge variant="outline">Resolution: {lesson.content.dataVisualization.resolution}</Badge>
+              )}
+            </div>
+            <p className="text-xs text-muted-foreground leading-relaxed">{lesson.content.dataVisualization.citation}</p>
+
+            {/* Real NASA Data Values Display */}
+            {lesson.content.dataVisualization.realDataValues &&
+              lesson.content.dataVisualization.realDataValues.length > 0 && (
+                <div className="mt-3 pt-3 border-t border-blue-100">
+                  <p className="text-sm font-semibold mb-2">Real NASA Data Points:</p>
+                  <div className="space-y-1">
+                    {lesson.content.dataVisualization.realDataValues.map((dataPoint, idx) => (
+                      <div key={idx} className="text-xs font-mono bg-blue-50 px-2 py-1 rounded">
+                        {dataPoint.date}: <span className="font-bold">{dataPoint.value}</span> {dataPoint.unit}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
           </div>
         </Card>
       )}

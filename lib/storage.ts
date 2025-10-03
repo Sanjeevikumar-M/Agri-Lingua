@@ -33,6 +33,17 @@ export function createNewProfile(username: string): UserProfile {
     completedModules: [],
     currentModule: 1,
     createdAt: new Date().toISOString(),
+    yieldPoints: {
+      total: 0,
+      spent: 0,
+      available: 0,
+    },
+    unlockedResolutions: [
+      {
+        resolutionId: "modis",
+        unlockedAt: new Date().toISOString(),
+      },
+    ],
   }
 }
 
@@ -97,4 +108,35 @@ export function clearUserData(): void {
   if (typeof window !== "undefined") {
     localStorage.removeItem(STORAGE_KEYS.USER_PROFILE)
   }
+}
+
+// Helper functions for Yield Points management
+export function addYieldPoints(profile: UserProfile, points: number): UserProfile {
+  profile.yieldPoints.total += points
+  profile.yieldPoints.available += points
+  return profile
+}
+
+export function spendYieldPoints(profile: UserProfile, points: number): boolean {
+  if (profile.yieldPoints.available >= points) {
+    profile.yieldPoints.spent += points
+    profile.yieldPoints.available -= points
+    return true
+  }
+  return false
+}
+
+export function unlockDataResolution(profile: UserProfile, resolutionId: string): UserProfile {
+  const alreadyUnlocked = profile.unlockedResolutions.some((r) => r.resolutionId === resolutionId)
+  if (!alreadyUnlocked) {
+    profile.unlockedResolutions.push({
+      resolutionId,
+      unlockedAt: new Date().toISOString(),
+    })
+  }
+  return profile
+}
+
+export function hasUnlockedResolution(profile: UserProfile, resolutionId: string): boolean {
+  return profile.unlockedResolutions.some((r) => r.resolutionId === resolutionId)
 }
